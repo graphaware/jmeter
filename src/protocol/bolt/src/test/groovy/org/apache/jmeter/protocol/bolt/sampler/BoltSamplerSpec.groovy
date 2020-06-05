@@ -24,6 +24,7 @@ import org.apache.jmeter.threads.JMeterVariables
 import org.neo4j.driver.Driver
 import org.neo4j.driver.Result
 import org.neo4j.driver.Session
+import org.neo4j.driver.SessionConfig
 import org.neo4j.driver.exceptions.ClientException
 import org.neo4j.driver.summary.ResultSummary
 import org.neo4j.driver.summary.SummaryCounters
@@ -44,10 +45,11 @@ class BoltSamplerSpec extends Specification {
         def variables = new JMeterVariables()
         // ugly but could not find a better way to pass the driver to the sampler...
         variables.putObject(BoltConnectionElement.BOLT_CONNECTION, driver)
+        variables.putObject(BoltConnectionElement.DATABASE, BoltConnectionElement.DATABASE)
         JMeterContextService.getContext().setVariables(variables)
         entry.addConfigElement(boltConfig)
         session = Mock(Session)
-        driver.session() >> session
+        driver.session(SessionConfig.forDatabase(BoltConnectionElement.DATABASE)) >> session
     }
 
     def "should execute return success on successful query"() {

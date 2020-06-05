@@ -39,9 +39,12 @@ public class BoltConnectionElement extends AbstractTestElement
     private String boltUri;
     private String username;
     private String password;
+    private String database;
     private Driver driver;
 
     public static final String BOLT_CONNECTION = "boltConnection";
+    public static final String DATABASE = "database";
+    public static final String DEFAULT_DATABASE = "neo4j";
 
     public BoltConnectionElement() {
     }
@@ -67,6 +70,7 @@ public class BoltConnectionElement extends AbstractTestElement
             synchronized (this) {
                 driver = GraphDatabase.driver(getBoltUri(), AuthTokens.basic(getUsername(), getPassword()));
                 variables.putObject(BOLT_CONNECTION, driver);
+                variables.put(DATABASE, database==null || database.length()==0 ? DEFAULT_DATABASE :database);
             }
         }
     }
@@ -116,7 +120,19 @@ public class BoltConnectionElement extends AbstractTestElement
         this.password = password;
     }
 
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
     public static Driver getDriver() {
         return (Driver) JMeterContextService.getContext().getVariables().getObject(BOLT_CONNECTION);
+    }
+
+    public static String getDatabaseName() {
+        return JMeterContextService.getContext().getVariables().get(DATABASE);
     }
 }
