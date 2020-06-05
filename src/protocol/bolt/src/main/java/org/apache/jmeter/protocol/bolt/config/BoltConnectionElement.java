@@ -44,6 +44,7 @@ public class BoltConnectionElement extends AbstractTestElement
 
     public static final String BOLT_CONNECTION = "boltConnection";
     public static final String DATABASE = "database";
+    public static final String DEFAULT_DATABASE = "neo4j";
 
     public BoltConnectionElement() {
     }
@@ -69,7 +70,7 @@ public class BoltConnectionElement extends AbstractTestElement
             synchronized (this) {
                 driver = GraphDatabase.driver(getBoltUri(), AuthTokens.basic(getUsername(), getPassword()));
                 variables.putObject(BOLT_CONNECTION, driver);
-                variables.put(DATABASE, database==null || database.length()==0 ? "neo4j":database);
+                variables.put(DATABASE, database==null || database.length()==0 ? DEFAULT_DATABASE :database);
             }
         }
     }
